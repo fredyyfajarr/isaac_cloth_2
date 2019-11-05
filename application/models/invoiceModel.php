@@ -66,19 +66,8 @@
 			return $this->db->get()->result();
 		}
 
-		public function getInvoiceByResi($id)
-		{
-            $this->db->order_by('id_invoice', 'ASC');
-			$this->db->select('*');
-            $this->db->from('transaksi');
-			$this->db->where('transaksi.kd_resi', $id);
-			
-			return $this->db->get()->result();
-		}
-
 		public function getIdPemesanan($id)
 		{
-
 			$this->db->select('*');
             $this->db->from('pemesanan');
 			$this->db->join('transaksi', 'transaksi.id_invoice=pemesanan.id_invoice');
@@ -95,7 +84,8 @@
 			return $this->db->get()->row_array();
 		}
 
-		public function konfirmasiPemesanan($id){
+		public function pendingToSending($id)
+		{
 			$id = $this->input->post('id');
 
 			$data = [  
@@ -106,7 +96,8 @@
 			$this->db->update('transaksi', $data);
 		}
 
-		public function konfirmasiBarang($id){
+		public function konfirmasiBarang($id)
+		{
 			$id = $this->input->post('id');
 
 			$data = [  

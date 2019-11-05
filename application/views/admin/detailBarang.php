@@ -56,16 +56,18 @@
           <th>Keyword</th><td>:</td><td><?= $barang['keyword'] ?></td>
           </tr>
           <tr>
-          <th>Harga</th><td>:</td><td><?= rupiah($barang['harga']); ?></td>
+          <th>Harga</th><td>:</td><td><?= rupiah($barang['harga']) ?></td>
           </tr>
           <tr>
-          <th>Ukuran</th><td>:</td><td><?= $det_barang['ukuran']; ?></td>
+          <th>Diskon</th><td>:</td><td><?= $barang['diskon'] ?> %</td>
+          </tr>
+          <th>Ukuran</th><td>:</td><td><?= $barang['ukuran'] ?></td>
           </tr>
           <tr>
-          <th>Berat</th><td>:</td><td><?= $det_barang['berat']; ?> Kg</td>
+          <th>Berat</th><td>:</td><td><?= $barang['berat'] ?> Kg</td>
           </tr>
           <tr>
-          <th>Stok</th><td>:</td><td><?= $det_barang['stok']; ?> pcs</td>
+          <th>Stok</th><td>:</td><td><?= $barang['stok'] ?> pcs</td>
           </tr>
         </table>
       </div>

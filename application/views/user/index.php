@@ -1,10 +1,9 @@
 <?php
-      $harga = 'harga';
-
+    $harga = 'harga';
     function rupiah($harga){
         $hasil = "Rp " . number_format($harga,0,',','.');
         return $hasil;
-    }
+	}
 ?>
 <!-- search -->
 <div class="container mt-3">
@@ -37,7 +36,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-sm-8">
+		<div class="col-sm-9">
 			<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
 			<ol class="carousel-indicators">
 				<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -46,13 +45,13 @@
 			</ol>
 			<div class="carousel-inner" role="listbox">
 				<div class="carousel-item active">
-				<img class="d-block img-fluid" src="<?= base_url('assets/img/landing.jpg') ?>" alt="First slide">
+				<img class="d-block img-fluid" src="<?= base_url('assets/img/banner.jpg') ?>" alt="First slide">
 				</div>
 				<div class="carousel-item">
-				<img class="d-block img-fluid" src="<?= base_url('assets/img/landing.jpg') ?>" alt="Second slide">
+				<img class="d-block img-fluid" src="<?= base_url('assets/img/banner.jpg') ?>" alt="Second slide">
 				</div>
 				<div class="carousel-item">
-				<img class="d-block img-fluid" src="<?= base_url('assets/img/landing.jpg') ?>" alt="Third slide">
+				<img class="d-block img-fluid" src="<?= base_url('assets/img/banner.jpg') ?>" alt="Third slide">
 				</div>
 			</div>
 			<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -66,7 +65,7 @@
 			</div>
 		</div> <!-- end of col --> 
 		
-		<div class="col-sm-4 mt-4">
+		<div class="col-sm-3 mt-4">
 			<ul class="list-group">
 				<li class="list-group-item active bg-gradient-primary">Category</li>
 			</ul>
@@ -98,19 +97,39 @@
 
 		<?php foreach ($barang->result_array() as $row) : ?>
 			<div class="col-6 col-lg-3 col-md-6 col-sm-6 mb-4 mt-3">
-				<div class="card h-100 bg-gradient-primary">
+				<div class="card bg-gradient-primary shadow-lg">
 				<a href="#"><img class="card-img-top" src="<?= base_url('assets/img/' . $row['gambar']); ?>" style="max-width: 400px; max-height: 200px;" alt=""></a>
 					<div class="card-body">
 						<h4 class="card-title text-white" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 40px;">
-						<a href="#" class="text-white"><?= $row['nama'] ?></a>
+						<a href="<?= base_url('user/detail_barang/') . $row['kd_brg'] ?>" class="text-white"><?= $row['nama'] ?></a>
 						</h4>
-						<p class="text-white"><?= rupiah($row['harga']); ?></p>
+						<?php 
+						
+						 $diskon = $row['harga'] * ($row['diskon'] / 100);
+						 $total = $row['harga'] - $diskon;
+						
+						?>
+						<em class='text-white'>Disc <?= $row['diskon'] ?> %</em><br>
+						<?php if( $row['diskon'] <= 0 ) : ?>
+							<em class="text-white"><?= rupiah($row['harga']); ?></em> <br>
+						<?php else : ?>
+						<div class="row">
+							<div class="col-sm-12">
+								<em class="text-white" style="text-decoration: line-through"><?= rupiah($row['harga']); ?></em>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<em class="text-white"><?= rupiah($total); ?></em>
+							</div>
+						</div>
+						<?php endif; ?>
 						<a href="<?= base_url('user/detail_barang/') . $row['kd_brg'] ?>" class="btn btn-light btn-sm m-0 mt-2 float-right text-primary"><i class="fas fa-eye fa-fw"></i></a>
-						<?php if( $row['stok'] <= 0 ) { ?>
+						<?php if( $row['stok'] <= 0) : ?>
 							<div class="btn btn-disabled btn-light btn-sm mt-2 float-right mr-2 text-danger"><i class="fas fa-times-circle fa-fw"></i></div>
-						<?php }else{ ?>
-							<?= anchor("user/tambah_ke_keranjang/" . $row['kd_brg'], '<div class="btn btn-light btn-sm mt-2 float-right mr-2 text-primary"><i class="fas fa-shopping-cart fa-fw"></i></div>') ?>
-						<?php } ?>
+						<?php else : ?>
+							<?= anchor("user/tambah_ke_keranjang/" . $row['kd_brg'], '<div class="btn btn-light btn-sm mt-2 float-right mr-2 text-primary"><i class="fas fa-cart-plus fa-fw"></i></div>') ?>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>

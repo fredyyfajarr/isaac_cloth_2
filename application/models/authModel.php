@@ -1,6 +1,6 @@
 <?php 
     class authModel extends CI_Model{
-        // BAGIAN REGISTER
+        // REGISTER
         public function Registrasi(){
             $data = [
                 'kd_konsumen'   => $this->input->post('kd_konsumen', true),
@@ -25,11 +25,6 @@
             return $this->db->get('provinsi')->result_array();
         }
 
-        public function getAllKota(){
-            $this->db->order_by('nama_kota','ASC');
-            return $this->db->get('kota')->result_array();
-        }
-
         public function getKotaByProv($kd_prov){
             $this->db->where('kd_prov', $kd_prov);
             $result = $this->db->get('kota')->result(); // Tampilkan semua data kota berdasarkan id provinsi
@@ -37,25 +32,7 @@
             return $result;
         }
 
-        public function getProvinsi($kd_prov){
-            
-            $this->db->select('*');
-            $this->db->from('konsumen');
-            $this->db->join('provinsi', 'provinsi.kd_prov=konsumen.kd_prov');
-            $this->db->where('konsumen.kd_prov', $kd_prov);
-            return $this->db->get()->row_array();
-        }
-
-        public function getKota($kd_kota){
-            
-            $this->db->select('*');
-            $this->db->from('konsumen');
-            $this->db->join('kota', 'kota.kd_kota=konsumen.kd_kota');
-            $this->db->where('konsumen.kd_kota', $kd_kota);
-            return $this->db->get()->row_array();
-        }
-
-        // BAGIAN LOGIN
+        // LOGIN
         public function Login(){
 
             $email    = $this->input->post('email');
@@ -111,7 +88,7 @@
             }
         }
 
-        // GET TABEL PROV DAN KOTA
+        // AI kode
         public function kodeKonsumen(){
             $this->db->select('RIGHT(konsumen.kd_konsumen,2) as kd_konsumen', FALSE);
             $this->db->order_by('kd_konsumen','DESC');

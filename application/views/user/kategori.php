@@ -93,13 +93,33 @@
 
 		<?php foreach ($barang->result_array() as $row) : ?>
 			<div class="col-sm-3 mb-2">
-				<div class="card h-100 bg-gradient-primary">
+				<div class="card h-100 bg-gradient-primary shadow-lg">
 				<a href="#"><img class="card-img-top" src="<?= base_url('assets/img/' . $row['gambar']); ?>" style="max-width: 400px; max-height: 200px;" alt=""></a>
 					<div class="card-body">
 						<h4 class="card-title text-white" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 40px;">
-						<a href="#" class="text-white"><?= $row['nama'] ?></a>
+						<a href="<?= base_url('user/detail_barang/') . $row['kd_brg'] ?>" class="text-white"><?= $row['nama'] ?></a>
 						</h4>
-						<h5 class="text-white"><?= rupiah($row['harga']); ?></h5>
+						<?php 
+						
+						 $diskon = $row['harga'] * ($row['diskon'] / 100);
+						 $total = $row['harga'] - $diskon;
+						
+						?>
+						<em class='text-white'>Disc <?= $row['diskon'] ?> %</em><br>
+						<?php if( $row['diskon'] <= 0 ) :?>
+							<em class="text-white" style="text-decoration: line-through"><?= rupiah($row['harga']); ?></em> <br>
+						<?php else : ?>
+						<div class="row">
+							<div class="col-sm-12">
+								<em class="text-white" style="text-decoration: line-through"><?= rupiah($row['harga']); ?></em>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<em class="text-white"><?= rupiah($total); ?></em>
+							</div>
+						</div>
+						<?php endif; ?>
 						<a href="<?= base_url('user/detail_barang/') . $row['kd_brg'] ?>" class="btn btn-light btn-sm m-0 mt-2 float-right text-primary"><i class="fas fa-eye fa-fw"></i></a>
 						<?php if( $row['stok'] <= 0 ) { ?>
 							<div class="btn btn-disabled btn-light btn-sm mt-2 float-right mr-2 text-danger"><i class="fas fa-times-circle fa-fw"></i></div>

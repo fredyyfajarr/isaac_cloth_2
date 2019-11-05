@@ -1,11 +1,19 @@
 <!-- Footer -->
-<div>
+<!-- <div>
   <footer class="py-5 bg-gradient-primary mt-5" >
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; Isaac Cloth</p>
     </div>
   </footer>
-</div>
+</div> -->
+
+      <footer class="sticky-footer">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright © Isaac Cloth</span>
+          </div>
+        </div>
+      </footer>
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

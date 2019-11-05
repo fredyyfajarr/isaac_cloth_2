@@ -32,7 +32,7 @@
         <div class="form-group col-sm-6">
           <label for="kategori">Category</label>
             <select class="form-control custom-select" name="kd_kategori" id="kategori" required>
-                  <option selected disabled>Category Sekarang : <?= $barang['nama_kategori'] ?></option>
+                  <option selected value="<?= $barang['kd_kategori']  ?>" >Category Sekarang : <?= $barang['nama_kategori'] ?></option>
                     <?php foreach ($kategori as $ktg) : ?>
                       <option value="<?= $ktg['kd_kategori']; ?>"><?= $ktg['nama_kategori']?></option>
                     <?php endforeach; ?>
@@ -63,15 +63,15 @@
     <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="ukuran">Ukuran</label>
-          <input type="text" name="ukuran" class="form-control" id="ukuran" value="<?= $det_barang['ukuran'] ?>">
+          <input type="text" name="ukuran" class="form-control" id="ukuran" value="<?= $barang['ukuran'] ?>">
         </div>
         <div class="form-group col-sm-4">
           <label for="berat">Berat</label>
-          <input type="text" name="berat" class="form-control" id="berat" value="<?= $det_barang['berat'] ?>">
+          <input type="text" name="berat" class="form-control" id="berat" value="<?= $barang['berat'] ?>">
         </div>
         <div class="form-group col-sm-4">
           <label for="stok">Stok</label>
-          <input type="text" name="stok" class="form-control" id="stok" value="<?= $det_barang['stok'] ?>">
+          <input type="text" name="stok" class="form-control" id="stok" value="<?= $barang['stok'] ?>">
         </div>
     </div>
     
@@ -79,6 +79,10 @@
       <div class="form-group col-sm-4">
         <label for="harga">Harga</label>
         <input type="text" class="form-control" name="harga" id="harga" required  value="<?= $barang['harga'] ?>">
+      </div>
+      <div class="form-group col-sm-4">
+        <label for="harga">Diskon</label>
+        <input type="text" class="form-control" name="diskon" id="diskon" required  value="<?= $barang['diskon'] ?>">
       </div>
     </div>
 

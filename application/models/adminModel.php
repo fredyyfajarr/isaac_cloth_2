@@ -6,37 +6,29 @@
             $this->db->order_by('kd_brg', 'ASC');
             $this->db->select('*');
             $this->db->from('barang');
+            // include tabel kategori
             $this->db->join('kategori', 'kategori.kd_kategori=barang.kd_kategori');
             return $this->db->get()->result_array();
         }
         
-        public function getAllUser(){
-            
+        public function getAllUser()
+        {    
             return $this->db->get('konsumen')->result_array();
         }
         
-        public function getAllKategori(){
-            
-            return $this->db->get('kategori')->result_array();
-        }
-        
         // GET BY ID
-        public function getKategori($kd_brg){
-            
+        public function getBarang($kd_brg)
+        {
             $this->db->select('*');
             $this->db->from('barang');
+            // include tabel kategori by kd_barang
             $this->db->join('kategori', 'kategori.kd_kategori=barang.kd_kategori');
-            $this->db->where('barang.kd_brg', $kd_brg);
-            return $this->db->get()->row_array();
-        }
-        
-        public function getDetBarang($kd_brg){
-            $this->db->select('*');
-            $this->db->from('barang');
+            // include tabel det_barang by kd_barang
             $this->db->join('det_barang', 'det_barang.kd_brg=barang.kd_brg');
             $this->db->where('barang.kd_brg', $kd_brg);
             return $this->db->get()->row_array();
         }
+        
         // TAMBAH BARANG 
         public function tambahBarang(){
             $gambar = $_FILES['gambar']['name'];
@@ -68,7 +60,8 @@
                 'bahan'           => $this->input->post('bahan', true),
                 'warna'           => $this->input->post('warna', true),
                 'keyword'         => $this->input->post('keyword', true),
-                'gambar'          => $gambar
+                'gambar'          => $gambar,
+                'diskon'          => $this->input->post('diskon', true)
                 ];
 
             $dataa = [
@@ -94,7 +87,8 @@
                 'kd_kategori'     => $this->input->post('kd_kategori', true),
                 'bahan'           => $this->input->post('bahan', true),
                 'warna'           => $this->input->post('warna', true),
-                'keyword'         => $this->input->post('keyword', true)
+                'keyword'         => $this->input->post('keyword', true),
+                'diskon'          => $this->input->post('diskon', true)
             ];
 
             $dataa = [  
@@ -121,8 +115,7 @@
                 redirect(base_url());
             }
         }
-        
-
+    
         // AI VARCHAR
         public function kodeBrg(){
             $this->db->select('RIGHT(barang.kd_brg,2) as kd_brg', FALSE);
@@ -141,7 +134,6 @@
             $kodetampil = "KAT".$batas;
             return $kodetampil;
         }
-        
     }   
 
 

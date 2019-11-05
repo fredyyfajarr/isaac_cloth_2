@@ -14,12 +14,11 @@ class user extends CI_Controller {
 
         $data['user']     = $this->userModel->getAllUser();
         $data['barang']   = $this->userModel->getAllBarang();
-        $data['kategori'] = $this->userModel->tampilJmlKategori();
+        $data['kategori'] = $this->userModel->tampilJmlBarang();
         $data['cart']     = $this->cart->contents();        
         if($this->input->post('keyword')){
             $data['barang'] = $this->userModel->productKeyword();
         }
-        
         $this->load->view('layout/header',$data);
         $this->load->view('user/index',$data);
         $this->load->view('layout/footer');
@@ -30,8 +29,8 @@ class user extends CI_Controller {
         $data['judul'] = 'Isaac Cloth';
 
         $data['user']     = $this->userModel->getAllUser();
-        $data['barang']   = $this->userModel->getKategoriByID($kd_kategori);
-        $data['kategori'] = $this->userModel->tampilJmlKategori();
+        $data['barang']   = $this->userModel->getBarangByKategori($kd_kategori);
+        $data['kategori'] = $this->userModel->tampilJmlBarang();
         $data['cart']     = $this->cart->contents();    
         if($this->input->post('keyword')){
             $data['barang'] = $this->userModel->productKeyword();
@@ -46,8 +45,7 @@ class user extends CI_Controller {
     public function detail_barang($kd_brg){
         $data['judul'] = 'Detail Barang';
 
-        $data['barang']     = $this->userModel->getBarangByID($kd_brg);
-        $data['det_barang'] = $this->userModel->getDetBarang($kd_brg);
+        $data['barang']     = $this->userModel->getBarang($kd_brg);
         $data['cart']       = $this->cart->contents();
 
         $this->load->view('layout/header',$data);
@@ -58,11 +56,17 @@ class user extends CI_Controller {
     public function tambah_ke_keranjang($kd_brg){
         $this->userModel->secure(); // session login
         $barang = $this->userModel->find($kd_brg);
-
+            if($barang->diskon <= 0){
+                $total = $barang->harga;
+            }
+            else{
+                $diskon = $barang->harga * ($barang->diskon / 100);
+                $total = $barang->harga - $diskon;
+            }
 			$data = array(
 			   'id'   	=> $barang->kd_brg,
 			   'qty'    => 1,
-			   'price'  => $barang->harga,
+			   'price'  => $total,
 			   'name'   => $barang->nama
 			);
 
@@ -92,7 +96,6 @@ class user extends CI_Controller {
         $data['judul'] = 'Proses Transaksi';
 
         $data['provinsi'] = $this->userModel->getAllProvinsi();
-        $data['kota']     = $this->userModel->getAllKota();
         $data['jasa']     = $this->userModel->getAllJasa();
         $data['kode']     = $this->userModel->kodeResi();
 
@@ -164,11 +167,11 @@ class user extends CI_Controller {
         $data['alamat']    = $this->input->post('alamat1');
         $data['kd_resi']   = $this->input->post('kd_resi1');
         $data['kd_prov']   = $this->input->post('kd_prov1');
-        $data['bk_kota']   = $this->userModel->getAllBiayaKota($this->input->post('kd_kota1'));
+        $data['bk_kota']   = $this->userModel->getBiayaKota($this->input->post('kd_kota1'));
         $data['kd_kota']   = $this->input->post('kd_kota1');
         $data['kd_jasa']   = $this->input->post('kd_jasa1');
         $data['kd_jp']     = $this->input->post('kd_jp1');
-        $data['bk_bk']     = $this->userModel->getAllBiayaKirim($this->input->post('kd_bk1'));
+        $data['bk_bk']     = $this->userModel->getBiayaKirim($this->input->post('kd_bk1'));
         $data['kd_bk']     = $this->input->post('kd_bk1');
 		
 		$this->form_validation->set_rules('kd_resi', 'Kode Resi', 'required');
@@ -255,13 +258,15 @@ class user extends CI_Controller {
         $this->userModel->secure();
 
         $data['judul'] = 'Halaman Ubah Profile';
-        $data['user'] = $this->userModel->getKonsumenById($idUser);
+        $data['user']     = $this->userModel->getKonsumenById($idUser);
+        $data['provinsi'] = $this->userModel->getAllProvinsi();
 
-        $this->form_validation->set_rules('email', 'Email', 'required');
-        $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('nama_depan', 'Nama Depan', 'required');
         $this->form_validation->set_rules('nama_belakang', 'Nama Belakang', 'required');
-        $this->form_validation->set_rules('no_hp', 'No HP', 'required');
+        $this->form_validation->set_rules('kd_prov', 'Kode Provinsi', 'required');
+        $this->form_validation->set_rules('kd_kota', 'Kode Kota', 'required');
+        $this->form_validation->set_rules('kd_pos', 'Kode POs', 'required');
+        $this->form_validation->set_rules('telp', 'No HP', 'required');
 
         if ($this->form_validation->run() == FALSE)
                 {
@@ -274,7 +279,7 @@ class user extends CI_Controller {
                 {
                     $this->userModel->ubahProfile($idUser);
                     $this->session->set_flashdata('flash','Diubah');
-                    redirect(base_url('user/profile/') . $this->session->userdata('id_user'));
+                    redirect(base_url('user/profile/') . $this->session->userdata('kd_konsumen'));
                 }       
     }
 }

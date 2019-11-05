@@ -20,7 +20,7 @@
     </style>
     
 </head>
-<body>
+<body style="height: 100%;">
 
 <!-- Navbar jika tidak ada Session -->
 <?php 

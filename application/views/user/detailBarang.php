@@ -48,19 +48,26 @@
           <th>Keyword</th><td>:</td><td><?= $barang['keyword'] ?></td>
           </tr>
           <tr>
-          <th>Ukuran</th><td>:</td><td><?= $det_barang['ukuran']; ?></td>
+          <th>Ukuran</th><td>:</td><td><?= $barang['ukuran']; ?></td>
           </tr>
           <tr>
-          <th>Berat</th><td>:</td><td><?= $det_barang['berat']; ?> Kg</td>
+          <th>Berat</th><td>:</td><td><?= $barang['berat']; ?> Kg</td>
           </tr>
           <tr>
-          <th>Stok</th><td>:</td><td><?= $det_barang['stok']; ?> pcs</td>
+          <th>Stok</th><td>:</td><td><?= $barang['stok']; ?> pcs</td>
           </tr>
           <tr>
           <th>Harga</th><td>:</td><td><?= rupiah($barang['harga']); ?></td>
           </tr>
+          <tr>
+          <th>Diskon</th><td>:</td><td><?= $barang['diskon']; ?> %</td>
+          </tr>
         </table>
-        <?= anchor("user/tambah_ke_keranjang/" . $barang['kd_brg'], '<div class="btn btn-primary btn-sm"><i class="fas fa-shopping-cart fa-fw text-white"></i> Add to cart</div>') ?>
+        <?php if( $barang['stok'] <= 0 ) { ?>
+          <div class="btn btn-danger btn-disabled btn-sm"><i class="fas fa-times-circle fa-fw text-white"></i> Stock Habis</div>
+        <?php }else{ ?>
+          <?= anchor("user/tambah_ke_keranjang/" . $barang['kd_brg'], '<div class="btn btn-primary btn-sm"><i class="fas fa-shopping-cart fa-fw text-white"></i> Tambah ke keranjang</div>') ?>
+        <?php } ?>
       </div>
   </div>    
 </div>

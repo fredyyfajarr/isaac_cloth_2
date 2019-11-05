@@ -13,8 +13,6 @@ class auth extends CI_Controller {
         $this->authModel->secure();
         $data['kode']     = $this->authModel->kodeKonsumen();
         $data['provinsi'] = $this->authModel->getAllProvinsi();
-        $data['kota']     = $this->authModel->getAllKota();
-
 
         $this->form_validation->set_rules('kd_konsumen', 'KD Konsumen', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|max_length[24]');

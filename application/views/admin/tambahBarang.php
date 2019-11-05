@@ -78,6 +78,10 @@
       <input type="text" class="form-control" name="harga" id="harga" required placeholder="Example : 1000000">
     </div>
     <div class="form-group col-sm-4">
+      <label for="diskon">Diskon</label>
+      <input type="text" class="form-control" name="diskon" id="diskon" required placeholder="Max 100%">
+    </div>
+    <div class="form-group col-sm-4">
       <label for="gambar">Gambar</label>
         <div class="custom-file">
           <input name="gambar" type="file" class="custom-file-input" id="customFile">

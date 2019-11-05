@@ -31,11 +31,6 @@ class admin extends CI_Controller {
         $data['barang'] = $this->adminModel->getAllBarang();
         $data['user']   = $this->adminModel->getAllUser();
         
-        $keyword = $this->input->post('keyword');
-        if($this->input->post('keyword')){
-            $data['barang'] = $this->adminModel->productKeyword();
-        }
-        
         $this->load->view('layout/header_admin',$data);
         $this->load->view('admin/listProduk',$data);
         $this->load->view('layout/footer_admin',$data);
@@ -46,8 +41,7 @@ class admin extends CI_Controller {
         $this->adminModel->secure();
 
         $data['judul'] = 'Detail Barang';
-        $data['barang']     = $this->adminModel->getKategori($kd_brg);
-        $data['det_barang'] = $this->adminModel->getDetBarang($kd_brg);
+        $data['barang']     = $this->adminModel->getBarang($kd_brg);
 
         $this->load->view('layout/header_admin',$data);
         $this->load->view('admin/detailBarang',$data);
@@ -59,13 +53,14 @@ class admin extends CI_Controller {
         $this->adminModel->secure();
         
         $data['judul'] = 'Halaman Tambah Barang';
-        $data['kategori']   = $this->adminModel->getAllKategori();
+        $data['kategori']   = $this->adminModel->getAllBarang();
         $data['kode']       = $this->adminModel->kodeBrg();
 
         $this->form_validation->set_rules('kd_brg', 'Kode Barang');
         $this->form_validation->set_rules('nama', 'Nama Barang', 'required|max_length[32]');
         $this->form_validation->set_rules('deskripsi', 'Deskripsi Barang', 'required');
         $this->form_validation->set_rules('harga', 'Harga Barang', 'required');
+        $this->form_validation->set_rules('diskon', 'Diskon Barang', 'required|max_length[3]');
         $this->form_validation->set_rules('kd_kategori', 'Kategori Barang', 'required|max_length[24]');
         $this->form_validation->set_rules('bahan', 'Bahan Barang', 'required|max_length[16]');
         $this->form_validation->set_rules('warna', 'Warna Barang', 'required|max_length[16]');
@@ -94,14 +89,14 @@ class admin extends CI_Controller {
         $this->adminModel->secure();
 
         $data['judul'] = 'Halaman Edit Barang';
-        $data['kategori'] = $this->adminModel->getAllKategori();        
-        $data['barang']     = $this->adminModel->getKategori($kd_brg);
-		$data['det_barang'] = $this->adminModel->getDetBarang($kd_brg);
+        $data['kategori'] = $this->adminModel->getAllBarang();        
+        $data['barang']     = $this->adminModel->getBarang($kd_brg);
 		
         $this->form_validation->set_rules('kd_brg', 'Kode Barang');
         $this->form_validation->set_rules('nama', 'Nama Barang', 'required|max_length[32]');
         $this->form_validation->set_rules('deskripsi', 'Deskripsi Barang', 'required');
         $this->form_validation->set_rules('harga', 'Harga Barang', 'required');
+        $this->form_validation->set_rules('diskon', 'Diskon Barang', 'required|max_length[3]');
         $this->form_validation->set_rules('kd_kategori', 'Kategori Barang', 'required|max_length[24]');
         $this->form_validation->set_rules('bahan', 'Bahan Barang', 'required|max_length[16]');
         $this->form_validation->set_rules('warna', 'Warna Barang', 'required|max_length[16]');
@@ -156,8 +151,7 @@ class admin extends CI_Controller {
         $this->form_validation->set_rules('kd_status', 'Kode Status', 'required');
 
         if ($this->form_validation->run() == FALSE)
-                {
-                    
+                {  
                     $this->load->view('layout/header_admin',$data);
                     $this->load->view('admin/detailInvoice', $data);
                     $this->load->view('layout/footer_admin');
@@ -165,8 +159,8 @@ class admin extends CI_Controller {
                 else
                 {
                    
-                    $this->invoiceModel->konfirmasiPemesanan($id_trans);  
-                    $this->session->set_flashdata('flash','Diubah');
+                    $this->invoiceModel->pendingToSending($id_trans);  
+                    $this->session->set_flashdata('flash','Dikonfirmasi');
                     redirect(base_url('admin/invoice/'));
                 }       
     }

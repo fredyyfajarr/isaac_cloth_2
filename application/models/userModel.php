@@ -1,66 +1,23 @@
 <?php 
     class userModel extends CI_Model{
 
-        public function __construct()
+        public function getAllBarang()
         {
-            parent::__construct();
-        }
-
-        public function getAllBarang(){
             $this->db->order_by('barang.kd_brg', 'ASC');
             $this->db->select('*');
             $this->db->from('barang');
+            // include tabel kategori
             $this->db->join('kategori', 'kategori.kd_kategori=barang.kd_kategori');
+            // include tabel det_barang
             $this->db->join('det_barang', 'det_barang.kd_brg=barang.kd_brg');
             return $this->db->get();
         }
 
-        public function getAllBiayaKirim($id){
-            $this->db->order_by('kd_bk', 'ASC');
-            $this->db->select('biaya_kirim');
-            $this->db->from('biaya_kirim');
-            $this->db->where('kd_bk', $id);
-            return $this->db->get()->row();
-        }
-
-        public function getAllBiayaKota($id){
-            $this->db->order_by('kd_kota', 'ASC');
-            $this->db->select('biaya_kirim');
-            $this->db->from('kota');
-            $this->db->where('kd_kota', $id);
-            return $this->db->get()->row();
-	    }
-
-        public function getAllKategori(){
-            
-            return $this->db->get('kategori')->result_array();
-        }
-
-        public function getAllUser(){
-            
+        public function getAllUser()
+        {    
             return $this->db->get('konsumen')->result_array();
         }
 
-        public function getDetBarang($kd_brg){
-            $this->db->select('*');
-            $this->db->from('barang');
-            $this->db->join('det_barang', 'det_barang.kd_brg=barang.kd_brg');
-            $this->db->where('barang.kd_brg', $kd_brg);
-            return $this->db->get()->row_array();
-        }
-
-        public function getBarangByID($kd_brg){
-            $this->db->select('*');
-            $this->db->from('barang');
-            $this->db->join('kategori', 'kategori.kd_kategori=barang.kd_kategori');
-            $this->db->where('barang.kd_brg', $kd_brg);
-            return $this->db->get()->row_array();
-		}
-
-		public function getKonsumenById($idUser){
-            
-            return $this->db->get_where('konsumen', ['kd_konsumen' => $idUser])->row_array();
-        }
         // Cart
         public function find($kd_brg)
 		{
@@ -74,18 +31,32 @@
 				return array();
 			}
         }
-        
-        public function tampilJmlKategori(){
-            $this->db->select('*, COUNT(barang.kd_kategori) as total');
-            $this->db->join('kategori', 'barang.kd_kategori=kategori.kd_kategori');
-            $this->db->group_by('barang.kd_kategori'); 
-            $this->db->order_by('total', 'ASC'); 
-                   
-            $hasil = $this->db->get('barang');
-            return $hasil;
+        // close cart
+
+        public function getBarang($kd_brg)
+        {
+            $this->db->select('*');
+            $this->db->from('barang');
+            // include tabel kategori by kd_brg
+            $this->db->join('kategori', 'kategori.kd_kategori=barang.kd_kategori');
+            // include tabel det_barang by kd_brg
+            $this->db->join('det_barang', 'det_barang.kd_brg=barang.kd_brg');
+            $this->db->where('barang.kd_brg', $kd_brg);
+            return $this->db->get()->row_array();
         }
 
-        public function getKategoriByID($kd_kategori){
+        public function getKonsumenById($idUser)
+        {    
+            $this->db->select('*');
+            $this->db->from('konsumen');
+            $this->db->join('kota', 'kota.kd_kota = konsumen.kd_kota');
+            $this->db->join('provinsi', 'provinsi.kd_prov = konsumen.kd_prov');
+            $this->db->where('konsumen.kd_konsumen', $idUser);
+            return $this->db->get()->row_array();
+        }
+
+        public function getBarangByKategori($kd_kategori)
+        {
             $this->db->select('*');
             $this->db->from('kategori');
             $this->db->join('barang','barang.kd_kategori=kategori.kd_kategori');
@@ -95,11 +66,41 @@
             return $this->db->get();
         }
 
+        public function tampilJmlBarang()
+        {
+            $this->db->select('*, COUNT(barang.kd_kategori) as total');
+            $this->db->join('kategori', 'barang.kd_kategori=kategori.kd_kategori');
+            $this->db->group_by('barang.kd_kategori'); 
+            $this->db->order_by('total', 'ASC'); 
+                   
+            $hasil = $this->db->get('barang');
+            return $hasil;
+        }
+
+         public function getBiayaKirim($id)
+        {
+            $this->db->order_by('kd_bk', 'ASC');
+            $this->db->select('biaya_kirim');
+            $this->db->from('biaya_kirim');
+            $this->db->where('kd_bk', $id);
+            return $this->db->get()->row();
+        }
+
+        public function getBiayaKota($id)
+        {
+            $this->db->order_by('kd_kota', 'ASC');
+            $this->db->select('biaya_kirim');
+            $this->db->from('kota');
+            $this->db->where('kd_kota', $id);
+            return $this->db->get()->row();
+	    }
+
 		// Search
         public function productKeyword(){
             $keyword = $this->input->post('keyword', true);
             $this->db->like('nama', $keyword);
             $this->db->or_like('kd_kategori', $keyword);
+            $this->db->join('det_barang', 'det_barang.kd_brg=barang.kd_brg');
         
             return $this->db->get('barang');
         }
@@ -107,11 +108,6 @@
         public function getAllProvinsi(){
             $this->db->order_by('nama_prov','ASC');
             return $this->db->get('provinsi')->result_array();
-        }
-
-        public function getAllKota(){
-            $this->db->order_by('nama_kota','ASC');
-            return $this->db->get('kota')->result_array();
         }
 
         public function getAllJasa(){
@@ -144,11 +140,12 @@
         public function ubahProfile($idUser){
             $idUser = $this->input->post('kd_konsumen');
                 $data = [
-                    'email'           => $this->input->post('email', true),
                     'nama_depan'      => $this->input->post('nama_depan', true),
                     'nama_belakang'   => $this->input->post('nama_belakang', true),
-                    'username'        => $this->input->post('username', true),
-                    'no_hp'           => $this->input->post('no_hp', true)
+                    'kd_prov'         => $this->input->post('kd_prov', true),
+                    'kd_kota'         => $this->input->post('kd_kota', true),
+                    'kd_pos '         => $this->input->post('kd_pos', true),
+                    'telp'            => $this->input->post('telp', true)
             ];
 
             $this->db->where('kd_konsumen', $idUser);
