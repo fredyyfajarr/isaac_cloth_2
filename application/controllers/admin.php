@@ -1,11 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class admin extends CI_Controller {
+class Admin extends CI_Controller {
     public function __construct(){
         parent::__construct();
-        $this->load->model('adminModel');
-        $this->load->model('invoiceModel');
+        $this->load->model('admin_model');
+        $this->load->model('invoice_model');
         $this->load->library('form_validation');
 
         if($this->session->userdata('status') != 'login'){ 
@@ -14,7 +14,7 @@ class admin extends CI_Controller {
     }
 
     public function index(){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
 
         $data['judul'] = 'Dashboard';
 
@@ -25,11 +25,11 @@ class admin extends CI_Controller {
 
     // home list product
     public function list_produk(){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
 
         $data['judul'] = 'List Product';
-        $data['barang'] = $this->adminModel->getAllBarang();
-        $data['user']   = $this->adminModel->getAllUser();
+        $data['barang'] = $this->admin_model->getAllBarang();
+        $data['user']   = $this->admin_model->getAllUser();
         
         $this->load->view('layout/header_admin',$data);
         $this->load->view('admin/listProduk',$data);
@@ -38,10 +38,10 @@ class admin extends CI_Controller {
 
     // home det barang
     public function detail_barang($kd_brg){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
 
         $data['judul'] = 'Detail Barang';
-        $data['barang']     = $this->adminModel->getBarang($kd_brg);
+        $data['barang']     = $this->admin_model->getBarang($kd_brg);
 
         $this->load->view('layout/header_admin',$data);
         $this->load->view('admin/detailBarang',$data);
@@ -50,11 +50,11 @@ class admin extends CI_Controller {
 
     // home tambahBarang 
     public function tambah_barang(){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
         
         $data['judul'] = 'Halaman Tambah Barang';
-        $data['kategori']   = $this->adminModel->getAllBarang();
-        $data['kode']       = $this->adminModel->kodeBrg();
+        $data['kategori']   = $this->admin_model->getAllBarang();
+        $data['kode']       = $this->admin_model->kodeBrg();
 
         $this->form_validation->set_rules('kd_brg', 'Kode Barang');
         $this->form_validation->set_rules('nama', 'Nama Barang', 'required|max_length[32]');
@@ -78,7 +78,7 @@ class admin extends CI_Controller {
                 }
                 else
                 {
-                    $this->adminModel->tambahBarang();
+                    $this->admin_model->tambahBarang();
                     $this->session->set_flashdata('flash','Ditambahkan');
                     redirect(base_url('admin/list_produk'));
                 }        
@@ -86,11 +86,11 @@ class admin extends CI_Controller {
 
     // home editBarang 
     public function edit_barang($kd_brg){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
 
         $data['judul'] = 'Halaman Edit Barang';
-        $data['kategori'] = $this->adminModel->getAllBarang();        
-        $data['barang']     = $this->adminModel->getBarang($kd_brg);
+        $data['kategori'] = $this->admin_model->getAllBarang();        
+        $data['barang']     = $this->admin_model->getBarang($kd_brg);
 		
         $this->form_validation->set_rules('kd_brg', 'Kode Barang');
         $this->form_validation->set_rules('nama', 'Nama Barang', 'required|max_length[32]');
@@ -113,26 +113,26 @@ class admin extends CI_Controller {
                 }
                 else
                 {
-                    $this->adminModel->editBarang($kd_brg);
+                    $this->admin_model->editBarang($kd_brg);
                     $this->session->set_flashdata('flash','Diubah');
                     redirect(base_url('admin/list_produk'));
                 }       
     }
     // function delete barang
     public function hapus($kd_brg){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
         
-        $this->adminModel->hapusBarang($kd_brg);
+        $this->admin_model->hapusBarang($kd_brg);
         $this->session->set_flashdata('flash','Dihapus');
         redirect(base_url('admin/list_produk'));
     }
     
     // invoice
     public function invoice(){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
 
         $data['judul'] = 'Invoice';
-        $data['invoice'] = $this->invoiceModel->getAllInvoice();
+        $data['invoice'] = $this->invoice_model->getAllInvoice();
 
         $this->load->view('layout/header_admin',$data);
         $this->load->view('admin/invoice', $data);
@@ -141,11 +141,11 @@ class admin extends CI_Controller {
 
     // detail invoice
     public function detail_invoice($id){
-        $this->adminModel->secure();
+        $this->admin_model->secure();
 
         $data['judul'] = 'Detail Pemesanan';
-        $data['pemesanan'] = $this->invoiceModel->getIdPemesanan($id);     
-        $data['status'] = $this->invoiceModel->getIdStatus($id);  
+        $data['pemesanan'] = $this->invoice_model->getIdPemesanan($id);     
+        $data['status'] = $this->invoice_model->getIdStatus($id);  
 
         $this->form_validation->set_rules('id', 'Id Trans', 'required');
         $this->form_validation->set_rules('kd_status', 'Kode Status', 'required');
@@ -159,7 +159,7 @@ class admin extends CI_Controller {
                 else
                 {
                    
-                    $this->invoiceModel->pendingToSending($id_trans);  
+                    $this->invoice_model->pendingToSending($id_trans);  
                     $this->session->set_flashdata('flash','Dikonfirmasi');
                     redirect(base_url('admin/invoice/'));
                 }       

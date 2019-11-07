@@ -1,5 +1,5 @@
 <?php 
-    class userModel extends CI_Model{
+    class User_model extends CI_Model{
 
         public function getAllBarang()
         {

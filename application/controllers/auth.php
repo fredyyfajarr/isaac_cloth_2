@@ -1,18 +1,18 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class auth extends CI_Controller {
+class Auth extends CI_Controller {
     function __construct(){
         parent::__construct();
-        $this->load->model('authModel');
+        $this->load->model('auth_model');
         $this->load->library('form_validation');
     }
 
     public function daftar(){
         $data['judul'] = 'Halaman Register';
-        $this->authModel->secure();
-        $data['kode']     = $this->authModel->kodeKonsumen();
-        $data['provinsi'] = $this->authModel->getAllProvinsi();
+        $this->auth_model->secure();
+        $data['kode']     = $this->auth_model->kodeKonsumen();
+        $data['provinsi'] = $this->auth_model->getAllProvinsi();
 
         $this->form_validation->set_rules('kd_konsumen', 'KD Konsumen', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|max_length[24]');
@@ -34,7 +34,7 @@ class auth extends CI_Controller {
                 }
                 else
                 {
-                    $this->authModel->Registrasi();
+                    $this->auth_model->Registrasi();
 					$this->session->set_flashdata('flash','Didaftarkan');
                     redirect(base_url('auth/login'));
                 }       
@@ -44,7 +44,7 @@ class auth extends CI_Controller {
         // Ambil data ID Provinsi yang dikirim via ajax post
         $kd_prov = $this->input->post('kd_prov');
         
-        $kota = $this->authModel->getKotaByProv($kd_prov);
+        $kota = $this->auth_model->getKotaByProv($kd_prov);
         
         // Buat variabel untuk menampung tag-tag option nya
         // Set defaultnya dengan tag option Pilih
@@ -61,7 +61,7 @@ class auth extends CI_Controller {
 
     public function login(){
         $data['judul'] = 'Halaman Login';
-        $this->authModel->secure();
+        $this->auth_model->secure();
 
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('password', 'Password1', 'required');
@@ -75,7 +75,7 @@ class auth extends CI_Controller {
                 }
                 else
                 {
-                    $this->authModel->Login();
+                    $this->auth_model->Login();
                 }   
 
     }

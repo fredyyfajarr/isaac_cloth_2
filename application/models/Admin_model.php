@@ -1,5 +1,5 @@
 <?php 
-    class adminModel extends CI_Model{
+    class Admin_model extends CI_Model{
         // GET ALL DATA DI TABLE
         public function getAllBarang()
         {

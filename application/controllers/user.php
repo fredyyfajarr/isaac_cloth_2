@@ -1,23 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class user extends CI_Controller {
+class User extends CI_Controller {
     public function __construct(){
         parent::__construct();
-        $this->load->model('userModel');
-        $this->load->model('invoiceModel');
+        $this->load->model('user_model');
+        $this->load->model('invoice_model');
         $this->load->library('form_validation');
     }
     // home user
     public function index(){
         $data['judul'] = 'Isaac Cloth';
 
-        $data['user']     = $this->userModel->getAllUser();
-        $data['barang']   = $this->userModel->getAllBarang();
-        $data['kategori'] = $this->userModel->tampilJmlBarang();
+        $data['user']     = $this->user_model->getAllUser();
+        $data['barang']   = $this->user_model->getAllBarang();
+        $data['kategori'] = $this->user_model->tampilJmlBarang();
         $data['cart']     = $this->cart->contents();        
         if($this->input->post('keyword')){
-            $data['barang'] = $this->userModel->productKeyword();
+            $data['barang'] = $this->user_model->productKeyword();
         }
         $this->load->view('layout/header',$data);
         $this->load->view('user/index',$data);
@@ -28,12 +28,12 @@ class user extends CI_Controller {
     public function show($kd_kategori){
         $data['judul'] = 'Isaac Cloth';
 
-        $data['user']     = $this->userModel->getAllUser();
-        $data['barang']   = $this->userModel->getBarangByKategori($kd_kategori);
-        $data['kategori'] = $this->userModel->tampilJmlBarang();
+        $data['user']     = $this->user_model->getAllUser();
+        $data['barang']   = $this->user_model->getBarangByKategori($kd_kategori);
+        $data['kategori'] = $this->user_model->tampilJmlBarang();
         $data['cart']     = $this->cart->contents();    
         if($this->input->post('keyword')){
-            $data['barang'] = $this->userModel->productKeyword();
+            $data['barang'] = $this->user_model->productKeyword();
         }
         
         $this->load->view('layout/header',$data);
@@ -45,7 +45,7 @@ class user extends CI_Controller {
     public function detail_barang($kd_brg){
         $data['judul'] = 'Detail Barang';
 
-        $data['barang']     = $this->userModel->getBarang($kd_brg);
+        $data['barang']     = $this->user_model->getBarang($kd_brg);
         $data['cart']       = $this->cart->contents();
 
         $this->load->view('layout/header',$data);
@@ -54,8 +54,8 @@ class user extends CI_Controller {
     }
     
     public function tambah_ke_keranjang($kd_brg){
-        $this->userModel->secure(); // session login
-        $barang = $this->userModel->find($kd_brg);
+        $this->user_model->secure(); // session login
+        $barang = $this->user_model->find($kd_brg);
             if($barang->diskon <= 0){
                 $total = $barang->harga;
             }
@@ -75,7 +75,7 @@ class user extends CI_Controller {
     }
     // home keranjang saya
     public function keranjang_saya(){
-        $this->userModel->secure(); // session login
+        $this->user_model->secure(); // session login
         $data['judul'] = 'Keranjang Saya';
 
         $this->load->view('layout/header',$data);
@@ -85,19 +85,19 @@ class user extends CI_Controller {
     // function delete cart
     public function hapus_keranjang()
 		{
-            $this->userModel->secure(); // session login
+            $this->user_model->secure(); // session login
 			$this->cart->destroy();
 			redirect('user');
         }
     
     // home transaksi
     public function transaksi(){
-        $this->userModel->secure(); // session login
+        $this->user_model->secure(); // session login
         $data['judul'] = 'Proses Transaksi';
 
-        $data['provinsi'] = $this->userModel->getAllProvinsi();
-        $data['jasa']     = $this->userModel->getAllJasa();
-        $data['kode']     = $this->userModel->kodeResi();
+        $data['provinsi'] = $this->user_model->getAllProvinsi();
+        $data['jasa']     = $this->user_model->getAllJasa();
+        $data['kode']     = $this->user_model->kodeResi();
 
         $this->load->view('layout/header',$data);
         $this->load->view('user/transaksi',$data);
@@ -108,7 +108,7 @@ class user extends CI_Controller {
         // Ambil data ID Provinsi yang dikirim via ajax post
         $kd_prov = $this->input->post('kd_prov');
         
-        $kota = $this->userModel->getKotaByProv($kd_prov);
+        $kota = $this->user_model->getKotaByProv($kd_prov);
         
         // Buat variabel untuk menampung tag-tag option nya
         // Set defaultnya dengan tag option Pilih
@@ -126,7 +126,7 @@ class user extends CI_Controller {
         // Ambil data ID Provinsi yang dikirim via ajax post
         $kd_jasa = $this->input->post('kd_jasa');
         
-        $jp = $this->userModel->getJPByJasa($kd_jasa);
+        $jp = $this->user_model->getJPByJasa($kd_jasa);
         
         // Buat variabel untuk menampung tag-tag option nya
         // Set defaultnya dengan tag option Pilih
@@ -144,7 +144,7 @@ class user extends CI_Controller {
         // Ambil data ID Provinsi yang dikirim via ajax post
         $kd_jp   = $this->input->post('kd_jp');
         
-        $bk = $this->userModel->getBKByJP($kd_jp);
+        $bk = $this->user_model->getBKByJP($kd_jp);
         
         // Buat variabel untuk menampung tag-tag option nya
         // Set defaultnya dengan tag option Pilih
@@ -160,18 +160,18 @@ class user extends CI_Controller {
 
     // tampilan jika pesanan berhasil di pesan
     public function resi(){
-        $this->userModel->secure(); // session login
+        $this->user_model->secure(); // session login
         $data['judul'] = 'Resi Pemesanan';
         
         $data['nama']      = $this->input->post('nama_pemesan1');
         $data['alamat']    = $this->input->post('alamat1');
         $data['kd_resi']   = $this->input->post('kd_resi1');
         $data['kd_prov']   = $this->input->post('kd_prov1');
-        $data['bk_kota']   = $this->userModel->getBiayaKota($this->input->post('kd_kota1'));
+        $data['bk_kota']   = $this->user_model->getBiayaKota($this->input->post('kd_kota1'));
         $data['kd_kota']   = $this->input->post('kd_kota1');
         $data['kd_jasa']   = $this->input->post('kd_jasa1');
         $data['kd_jp']     = $this->input->post('kd_jp1');
-        $data['bk_bk']     = $this->userModel->getBiayaKirim($this->input->post('kd_bk1'));
+        $data['bk_bk']     = $this->user_model->getBiayaKirim($this->input->post('kd_bk1'));
         $data['kd_bk']     = $this->input->post('kd_bk1');
 		
 		$this->form_validation->set_rules('kd_resi', 'Kode Resi', 'required');
@@ -191,7 +191,7 @@ class user extends CI_Controller {
                 }
                 else
                 {
-                    $proses = $this->invoiceModel->index();
+                    $proses = $this->invoice_model->index();
 					if($proses){
 					$this->cart->destroy();
 					$this->session->set_flashdata('flash','Transaksi ');
@@ -205,10 +205,10 @@ class user extends CI_Controller {
 
     // home Pesanan Saya
     public function pesanan($id){
-        $this->userModel->secure(); // session login
+        $this->user_model->secure(); // session login
         $data['judul'] = 'Pesanan Saya';
         
-        $data['invoice'] = $this->invoiceModel->getInvoiceByUser($id);
+        $data['invoice'] = $this->invoice_model->getInvoiceByUser($id);
 
         $this->load->view('layout/header',$data);
         $this->load->view('user/pesanan',$data);
@@ -217,10 +217,10 @@ class user extends CI_Controller {
 
     // home Detail Pesanan Saya
     public function detail_pesanan($id){
-        $this->userModel->secure(); // session login
+        $this->user_model->secure(); // session login
         $data['judul']     = 'Detail Pesanan';
-        $data['pemesanan'] = $this->invoiceModel->getIdPemesanan($id);     
-        $data['status']    = $this->invoiceModel->getIdStatus($id);  
+        $data['pemesanan'] = $this->invoice_model->getIdPemesanan($id);     
+        $data['status']    = $this->invoice_model->getIdStatus($id);  
 
         $this->form_validation->set_rules('id', 'Id Trans', 'required');
         $this->form_validation->set_rules('kd_status', 'Kode Status', 'required');
@@ -235,7 +235,7 @@ class user extends CI_Controller {
                 else
                 {
                    
-                    $this->invoiceModel->KonfirmasiBarang($id_trans);  
+                    $this->invoice_model->KonfirmasiBarang($id_trans);  
                     $this->session->set_flashdata('flash','Berhasil');
                     redirect(base_url('user/pesanan/'.$this->session->userdata('kd_konsumen')));
                 }    
@@ -243,10 +243,10 @@ class user extends CI_Controller {
 	
 	  // home profile admin
     public function profile($idUser){
-        $this->userModel->secure();
+        $this->user_model->secure();
 
         $data['judul'] = 'Profile';
-        $data['user'] = $this->userModel->getKonsumenById($idUser);
+        $data['user'] = $this->user_model->getKonsumenById($idUser);
 
         $this->load->view('layout/header',$data);
         $this->load->view('user/profile',$data);
@@ -255,11 +255,11 @@ class user extends CI_Controller {
 
     // home ubah profile user
     public function ubah_profile($idUser){
-        $this->userModel->secure();
+        $this->user_model->secure();
 
         $data['judul'] = 'Halaman Ubah Profile';
-        $data['user']     = $this->userModel->getKonsumenById($idUser);
-        $data['provinsi'] = $this->userModel->getAllProvinsi();
+        $data['user']     = $this->user_model->getKonsumenById($idUser);
+        $data['provinsi'] = $this->user_model->getAllProvinsi();
 
         $this->form_validation->set_rules('nama_depan', 'Nama Depan', 'required');
         $this->form_validation->set_rules('nama_belakang', 'Nama Belakang', 'required');
@@ -277,7 +277,7 @@ class user extends CI_Controller {
                 }
                 else
                 {
-                    $this->userModel->ubahProfile($idUser);
+                    $this->user_model->ubahProfile($idUser);
                     $this->session->set_flashdata('flash','Diubah');
                     redirect(base_url('user/profile/') . $this->session->userdata('kd_konsumen'));
                 }       

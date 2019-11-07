@@ -1,5 +1,5 @@
 <?php 
-	class invoiceModel extends CI_Model{
+	class Invoice_model extends CI_Model{
 		public function index()
 		{
 			date_default_timezone_set('Asia/Jakarta');

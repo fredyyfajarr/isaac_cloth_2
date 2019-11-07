@@ -1,5 +1,5 @@
 <?php 
-    class authModel extends CI_Model{
+    class Auth_model extends CI_Model{
         // REGISTER
         public function Registrasi(){
             $data = [
