@@ -11,6 +11,10 @@
             return $this->db->get()->result_array();
         }
         
+        public function getAllKategori()
+        {
+            return $this->db->get('kategori')->result_array();
+        }
         public function getAllUser()
         {    
             return $this->db->get('konsumen')->result_array();

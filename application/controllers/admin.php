@@ -53,7 +53,7 @@ class Admin extends CI_Controller {
         $this->admin_model->secure();
         
         $data['judul'] = 'Halaman Tambah Barang';
-        $data['kategori']   = $this->admin_model->getAllBarang();
+        $data['kategori']   = $this->admin_model->getAllKategori();
         $data['kode']       = $this->admin_model->kodeBrg();
 
         $this->form_validation->set_rules('kd_brg', 'Kode Barang');
@@ -89,7 +89,7 @@ class Admin extends CI_Controller {
         $this->admin_model->secure();
 
         $data['judul'] = 'Halaman Edit Barang';
-        $data['kategori'] = $this->admin_model->getAllBarang();        
+        $data['kategori'] = $this->admin_model->getAllKategori();        
         $data['barang']     = $this->admin_model->getBarang($kd_brg);
 		
         $this->form_validation->set_rules('kd_brg', 'Kode Barang');
